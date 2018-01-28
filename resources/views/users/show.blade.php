@@ -15,11 +15,11 @@
                         </div>
                         <div class="media-body">
                             <hr>
-                            <h4><strong>个人简介</strong></h4>
-                            <p>{{ $user->introduction }}</p>
-                            <hr>
                             <h4><strong>注册于</strong></h4>
                             <p>{{ $user->created_at->diffForHumans() }}</p>
+                            <hr>
+                            <h4><strong>最后活跃</strong></h4>
+                            <p title="{{  $user->last_actived_at }}">{{ $user->last_actived_at->diffForHumans() }}</p>
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,11 @@
                         <li class="active"><a href="#">Ta 的话题</a></li>
                         <li><a href="#">Ta 的回复</a></li>
                     </ul>
-                    @include('users._topics', ['topics' => $user->topics()->recent()->paginate(5)])
+                    @if (if_query('tab', 'replies'))
+                        @include('users._replies', ['replies' => $user->replies()->with('topic')->recent()->paginate(5)])
+                    @else
+                        @include('users._topics', ['topics' => $user->topics()->recent()->paginate(5)])
+                    @endif
                 </div>
             </div>
         </div>
